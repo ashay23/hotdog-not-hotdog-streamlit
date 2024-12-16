@@ -1,5 +1,3 @@
-# hotdog-streamlit
-
 ---
 title: Hot Dog
 emoji: 🐨
