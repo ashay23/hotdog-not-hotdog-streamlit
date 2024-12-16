@@ -1,8 +1,8 @@
 ---
-title: Hot Dog Or Not - Streamlit
+title: Hot Dog? Or Not?
 emoji: 🐨
-colorFrom: gray
-colorTo: pink
+colorFrom: blue
+colorTo: indigo
 sdk: streamlit
 sdk_version: 1.41.1
 app_file: app.py
