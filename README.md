@@ -1,5 +1,5 @@
 ---
-title: Hot Dog
+title: Hot Dog Or Not - Streamlit
 emoji: 🐨
 colorFrom: gray
 colorTo: pink
