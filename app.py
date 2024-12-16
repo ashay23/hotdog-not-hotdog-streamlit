@@ -12,7 +12,7 @@ if file_name is not None:
     col1, col2 = st.columns(2)
 
     image = Image.open(file_name)
-    col1.image(image, use_column_width=True)
+    col1.image(image, use_container_width=True)
     predictions = pipeline(image)
 
     col2.header("Probabilities")
