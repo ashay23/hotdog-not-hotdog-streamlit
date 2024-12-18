@@ -35,12 +35,12 @@ jobs:
 
       # Step 4: Build Docker image
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/hotdog-streamlit:$GITHUB_SHA .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/hotdog-not-hotdog-streamlit:$GITHUB_SHA .
         # Build the Docker image with the specified tag using the commit hash to ensure a unique tag.
 
       # Step 5: Push Docker image to Docker Hub
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/hotdog-streamlit:$GITHUB_SHA
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/hotdog-not-hotdog-streamlit:$GITHUB_SHA
         # Push the newly built Docker image to Docker Hub using the same tag.
 
       # Step 6: Push the updated code to Hugging Face Hub
