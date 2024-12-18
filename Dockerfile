@@ -1,20 +1,26 @@
-# Use a Python base image
-FROM python:3.9-slim
+# Use an official lightweight Python image as the base
+FROM python:3.11-slim
 
-# Set the working directory inside the container
+# Set the working directory inside the container to organize files
 WORKDIR /app
 
-# Copy the requirements.txt file into the container
-COPY requirements.txt /app/
+# Copy the dependency list (requirements.txt) into the container
+# This step is separated to leverage Docker's caching mechanism for dependencies
+COPY requirements.txt .
 
-# Install the dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies and required NLTK data
+# - Upgrade pip for compatibility with newer packages
+# - Use --no-cache-dir to avoid caching installation files and reduce image size
+RUN python -m pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire project (including app.py) into the container
-COPY . /app/
+# Copy the remaining application files into the working directory
+# This includes the main application code and any supporting resources
+COPY . .
 
-# Expose port 8501 for Streamlit to run
+# Expose the default port used by Streamlit to enable external access
 EXPOSE 8501
 
-# Run Streamlit when the container starts
+# Specify the command to run the Streamlit application
+# This launches the app using Streamlit on the default port
 CMD ["streamlit", "run", "app.py"]
