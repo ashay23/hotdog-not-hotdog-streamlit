@@ -1,20 +1,25 @@
-name: Build and Sync to Hugging Face Hub
+# Workflow to sync updates to the Hugging Face Hub
+name: Build Docker image and Sync to Hugging Face Hub
 
 on:
+  # Trigger the workflow on push to the 'main' branch
   push:
     branches: [main]
-  workflow_dispatch: # Allow manual triggers from the Actions tab
+
+  # Allow manual triggering from the GitHub Actions tab
+  workflow_dispatch:
 
 jobs:
   build-and-sync:
+    # The job will run on an Ubuntu machine
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code from GitHub
+      # Step 1: Check out the code from the repository
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-          lfs: true
+          fetch-depth: 0        # Fetch all commit history (not just the latest)
+          lfs: true              # Ensure large files are fetched
 
       # Step 2: Set up Docker Buildx
       - name: Set up Docker Buildx
@@ -24,21 +29,23 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }} # Docker Hub username stored in GitHub secrets
+          password: ${{ secrets.DOCKER_PASSWORD }} # Docker Hub password stored in GitHub secrets
+        # Log in to Docker Hub using the credentials stored in GitHub secrets.
 
       # Step 4: Build Docker image
       - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/hotdog-streamlit:$GITHUB_SHA .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/hotdog-streamlit:$GITHUB_SHA .
+        # Build the Docker image with the specified tag using the commit hash to ensure a unique tag.
 
       # Step 5: Push Docker image to Docker Hub
       - name: Push Docker image to Docker Hub
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/hotdog-streamlit:$GITHUB_SHA
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/hotdog-streamlit:$GITHUB_SHA
+        # Push the newly built Docker image to Docker Hub using the same tag.
 
-      # Step 6: Sync to Hugging Face Hub (push code updates)
+      # Step 6: Push the updated code to Hugging Face Hub
       - name: Push to Hugging Face Hub
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push --force https://Ban93:$HF_TOKEN@huggingface.co/spaces/Ban93/hot_dog main
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Use the Hugging Face token stored in GitHub Secrets for authentication
+        # Push the code to the Hugging Face Space, overwriting the existing code
+        run: git push --force https://ashay23:$HF_TOKEN@huggingface.co/spaces/ashay23/hotdog-not-hotdog-streamlit main
